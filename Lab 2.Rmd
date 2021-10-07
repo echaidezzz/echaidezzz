@@ -1,0 +1,54 @@
+---
+title: "Lab 2 Write Up"
+author: "Emmanuel"
+date: "9/1/2021"
+output: word_document
+---
+
+```{r}
+library(readxl)
+x <- read_excel("C://R/Learning R/Car Price Dataset MBA 6250.xlsx")
+
+names(x)
+
+#Unvalidated Linear Regression Model
+model1 <- lm(price ~ enginesize + horsepower + curbweight, data = x)
+summary(model1)
+
+
+layout(matrix(c(1,2,3,4),2,2))
+plot(model1)
+
+#Histogram 
+attach(x)
+
+hist(x$horsepower)
+log_horsepower <- log(x$horsepower)
+hist(log_horsepower)
+
+hist(x$curbweight)
+reciprocol_curbweight <- (1/x$curbweight)
+hist(reciprocol_curbweight)
+
+hist(x$enginesize)
+log_enginesize <- log(x$enginesize)
+hist(log_enginesize)
+
+
+#Validated Linear Regression 
+model2 <- lm(price ~ log_enginesize + log_horsepower + reciprocol_curbweight, data = x)
+summary(model2)
+
+layout(matrix(c(1,2,3,4),2,2))
+plot(model2)
+
+library(MASS) 
+fit <- lm(price ~ enginesize + horsepower + curbweight, data = x)
+step <- stepAIC(fit, direction = "both") 
+
+
+pairs(~ price+ horsepower+ curbweight)
+
+
+```
+
