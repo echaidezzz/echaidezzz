@@ -1,0 +1,110 @@
+---
+title: "Churn 2 Vector"
+author: "Emmanuel"
+date: "9/20/2021"
+output: word_document
+---
+
+```{r}
+library(readxl)
+churn <- read_excel("Churn2.xlsx", sheet = "Churn_Modelling")
+
+dim(churn)
+names(churn)
+churn = churn[1:9]
+
+churn$Churned_d = factor(churn$Churned_d, levels = c(0,1))
+
+str(churn)
+
+library(caTools)
+
+set.seed(123)
+
+n <- nrow(churn) # Determine the number of rows in the dataset.
+n_train <- round(0.6 * n) # Select x% of records in the disease dataset.
+
+train_indices <- sample(1:n, n_train) # randomly select X% of total records.
+training_set <- churn[train_indices,] # Create training dataset.
+test_set <- churn[-train_indices,] # Create validation dataset.
+
+library(e1071)
+
+#New  Training Vector
+classifier = svm(Churned_d~., data=training_set, type='C-classification', kernel="linear")
+classifier
+
+y_pred = predict(classifier, newdata=test_set)
+
+#Confusion Matrix
+cm = table(y_pred,test_set$Churned_d)[2:1, 2:1]
+cm
+
+round(prop.table(table(y_pred, test_set$Churned_d),2),3)[2:1, 2:1]*100
+
+#Accuracy,
+diagonal = sum(diag(cm))
+Total_matrix = sum(cm)
+
+accuracy = (diagonal/Total_matrix)*100
+accuracy
+
+#New Training Vector
+classifier = svm(Churned_d~., data=training_set, type='C-classification', kernel="polynomial")
+classifier
+
+y_pred = predict(classifier, newdata=test_set)
+
+#Confusion Matrix
+cm = table(y_pred,test_set$Churned_d)[2:1, 2:1]
+cm
+
+round(prop.table(table(y_pred, test_set$Churned_d),2),3)[2:1, 2:1]*100
+
+#Accuracy
+diagonal = sum(diag(cm))
+Total_matrix = sum(cm)
+
+accuracy = (diagonal/Total_matrix)*100
+accuracy
+
+#New Training Vector
+classifier = svm(Churned_d~., data=training_set, type='C-classification', kernel="radial")
+classifier
+
+y_pred = predict(classifier, newdata=test_set)
+
+#Confusion Matrix
+cm = table(y_pred,test_set$Churned_d)[2:1, 2:1]
+cm
+
+round(prop.table(table(y_pred, test_set$Churned_d),2),3)[2:1, 2:1]*100
+
+#Accuracy
+diagonal = sum(diag(cm))
+Total_matrix = sum(cm)
+
+accuracy = (diagonal/Total_matrix)*100
+accuracy
+
+#New Training Vector
+classifier = svm(Churned_d~., data=training_set, type='C-classification', kernel="sigmoid")
+classifier
+
+y_pred = predict(classifier, newdata=test_set)
+
+#Confusion Matrix
+
+cm = table(y_pred,test_set$Churned_d)[2:1, 2:1]
+cm
+
+round(prop.table(table(y_pred, test_set$Churned_d),2),3)[2:1, 2:1]*100
+#Accuracy
+diagonal = sum(diag(cm))
+Total_matrix = sum(cm)
+
+accuracy = (diagonal/Total_matrix)*100
+accuracy
+
+```
+
