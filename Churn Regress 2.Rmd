@@ -1,0 +1,76 @@
+---
+title: "Churn Regress 2"
+author: "Emmanuel"
+date: "9/15/2021"
+output: word_document
+---
+
+```{r}
+library(readxl)
+Churn <- read_excel("C://R/Learning R/Churn.xlsx")
+
+
+set.seed(420)
+testing=sample(1:10000,6000,replace=FALSE)
+test=Churn[testing,]
+validation=Churn[-testing,]
+
+library(rpart)
+library(rpart.plot)
+
+tree1 <- rpart(churnBinary~ +GeorgraphyFrance + GeographyGermany + genderd + CreditScore + Age + Tenure + Balance + NumOfProducts + HasCrCard + IsActiveMember + EstimatedSalary, data=test)
+tree1
+
+plotcp(tree1)
+
+rpart.plot(tree1)
+
+y=predict(tree1,test)
+
+y[y>=0.1]=1
+y[y<0.1]=0
+
+y=factor(y)
+y <- relevel(y, ref="1")
+
+test$churnBinary=factor(test$churnBinary)
+test$churnBinary <- relevel(test$churnBinary, ref="1")
+
+table(y,test$churnBinary)
+
+round(prop.table(table(y,test$churnBinary),2),3)*100
+
+diag <- diag(table(y,test$churnBinary))
+total_diag <- sum(diag)
+
+grand_total <- sum(table(y,test$churnBinary))
+
+accuracy <- round((total_diag/grand_total)*100,2)
+accuracy
+
+y=predict(tree1,validation)
+
+y[y>=0.1]=1
+y[y<0.1]=0
+
+y=factor(y)
+y <- relevel(y, ref="1")
+
+validation$churnBinary=factor(validation$churnBinary)
+validation$churnBinary <- relevel(validation$churnBinary, ref="1")
+
+table(y,validation$churnBinary)
+
+round(prop.table(table(y,validation$churnBinary),2),3)*100
+
+diag <- diag(table(y,validation$churnBinary))
+total_diag <- sum(diag)
+
+grand_total <- sum(table(y,validation$churnBinary))
+
+accuracy <- round((total_diag/grand_total)*100,2)
+accuracy
+
+
+```
+
