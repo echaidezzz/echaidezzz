@@ -21,12 +21,12 @@ library(caTools)
 
 set.seed(123)
 
-n <- nrow(churn) # Determine the number of rows in the dataset.
-n_train <- round(0.6 * n) # Select x% of records in the disease dataset.
+n <- nrow(churn)
+n_train <- round(0.6 * n) 
 
-train_indices <- sample(1:n, n_train) # randomly select X% of total records.
-training_set <- churn[train_indices,] # Create training dataset.
-test_set <- churn[-train_indices,] # Create validation dataset.
+train_indices <- sample(1:n, n_train) 
+training_set <- churn[train_indices,] 
+test_set <- churn[-train_indices,] 
 
 library(e1071)
 
