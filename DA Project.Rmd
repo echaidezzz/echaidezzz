@@ -9,14 +9,14 @@ output: word_document
 library(readxl)
 nba_logregfinal <- read_excel("C:/R/Learning R/nba_logregfinal.xlsx")
 
-set.seed(420)    #Sets seed to not pull same data twice
-testing=sample(1:1340,804,replace=FALSE) # Setting a 60% - 40% split between test and validation set
-test_set=nba_logregfinal[testing,]       # setting training data set to pull 60% of data to variable test_set
-validation=nba_logregfinal[-testing,]    # remaining 40% from testing gets pulled into validation
+set.seed(420)    
+testing=sample(1:1340,804,replace=FALSE) 
+test_set=nba_logregfinal[testing,]       
+validation=nba_logregfinal[-testing,]  
 
 #Unvalidated Logistic Regression
 model1 <- glm(TARGET_5Yrs ~ GP + PTS + FGA + FG_PER+ THPMade+ THPA + FTM + OREB, data = nba_logregfinal)   # Start by pulling all variables and one by one take out the least significant values > .05 /  Then make logistic model with values significant for test_set
-summary(model1)    # Shows test_set summary of coefficients 
+summary(model1)    
 
 # Sets fitted.values of data that works into variable y
 y <- glm(TARGET_5Yrs ~ GP + PTS + FGA + FG_PER+ THPMade+ THPA + FTM + OREB, data = test_set,family="binomial"(link=logit))$fitted.values
